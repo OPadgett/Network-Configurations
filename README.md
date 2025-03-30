@@ -6,7 +6,7 @@ This repository contains essential network configurations for various networking
 ## 1. NAT (Network Address Translation) - Dynamic NAT Setup
 
 NAT is used to translate private IP addresses to a public IP for outbound traffic. This setup uses a dynamic NAT pool to assign public IP addresses to internal users dynamically.
-
+This code is a configuration for Network Address Translation (NAT) on a Cisco router. It configures NAT for the inside network (private IP addresses) and translates them to a pool of public IP addresses for outbound traffic. 
 ```
 enable
 configure terminal
@@ -21,10 +21,20 @@ ip nat outside
 exit
 write memory
 ```
+## Summary ##
+A NAT pool (MYPOOL) is configured with public IP addresses 203.0.113.1 to 203.0.113.10.
+
+ACL 1 is created to permit the 192.168.1.0/24 private network for NAT.
+
+The NAT configuration translates traffic from the inside network (private IP addresses) to the NAT pool (public IP addresses) using Port Address Translation (PAT).
+
+GigabitEthernet0/0 is configured as the inside interface, and GigabitEthernet0/1 is configured as the outside interface.
+
+The configuration is saved to the router’s memory.
 ## 2. VPN (Virtual Private Network) - Site-to-Site VPN (Cisco ASA)
 
 VPNs establish a secure connection between remote networks. This configuration sets up a site-to-site VPN using IPsec on a Cisco ASA device.
-
+This configuration is for setting up IPsec (Internet Protocol Security) VPN on a Cisco router, which includes configuring ISAKMP (Internet Security Association and Key Management Protocol) for secure communication, defining IPsec transform sets, and applying a crypto map to a specific interface.
 ```
 crypto isakmp policy 10
 encryption aes
@@ -43,7 +53,16 @@ interface GigabitEthernet0/0
 crypto map MYMAP
 exit
 ```
+## Summary ##
+ISAKMP Policy: Defines the security parameters for establishing a secure tunnel using ISAKMP (encryption, hashing, authentication, etc.).
 
+Pre-shared Key: Configures a shared secret (MySecretKey) for authentication with the peer at 203.0.113.2.
+
+IPsec Transform Set: Defines the encryption (AES) and integrity (SHA) algorithms for the IPsec tunnel.
+
+Crypto Map: Configures the settings for the IPsec VPN tunnel, including the peer's IP address, the transform set to use, and the ACL that matches the traffic to be encrypted.
+
+Interface Configuration: Applies the crypto map to the GigabitEthernet0/0 interface to encrypt traffic matching the ACL.
 ## 3. ACL (Access Control Lists) - Extended ACL Example
 
 ACLs control traffic flow within a network by allowing or denying packets based on predefined rules. This configuration allows HTTP and ICMP traffic but blocks all other traffic.
@@ -59,7 +78,7 @@ ip access-group 101 in
 ## 4. VLAN (Virtual Local Area Network) - VLAN and Trunking
 
 VLANs segment network traffic to improve security and efficiency. Trunking is used to allow multiple VLANs to communicate over a single link.
-
+This code is a series of Cisco switch commands used to configure VLANs (Virtual LANs), assign VLANs to specific switch ports, and set trunking for inter-VLAN communication.
 ```
 vlan 10
 name HR_Department
@@ -80,7 +99,14 @@ switchport trunk allowed vlan 10,20
 exit
 write memory
 ```
+## Summary ##
+VLAN 10 (HR_Department) is assigned to port GigabitEthernet0/1.
 
+VLAN 20 (IT_Department) is assigned to port GigabitEthernet0/2.
+
+GigabitEthernet0/3 is configured as a trunk port, allowing traffic for both VLAN 10 and VLAN 20.
+
+Finally, the configuration is saved to memory to persist across reboots.
 ## 5. OSPF (Open Shortest Path First) - Routing Protocol Setup
 
 OSPF is a dynamic routing protocol used to exchange routing information within an autonomous system. This configuration sets up OSPF on two network segments.
