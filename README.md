@@ -1,7 +1,9 @@
 # Network-Configurations
-# Network Configuration Scripts for IT Infrastructure
+# Network Configuration Scripts for IT Infrastructure (Bash)
 
 This repository contains essential network configurations for various networking tasks, including NAT, VPN, ACLs, VLANs, OSPF, and switch security settings. These configurations are designed for Cisco devices and provide a strong foundation for IT engineers working in networking environments.
+
+These configurations are commonly used in enterprise networks to enhance security, optimize traffic, and ensure reliable connectivity. Feel free to modify them based on your network requirements!
 
 ## 1. NAT (Network Address Translation) - Dynamic NAT Setup
 
@@ -66,7 +68,7 @@ Interface Configuration: Applies the crypto map to the GigabitEthernet0/0 interf
 ## 3. ACL (Access Control Lists) - Extended ACL Example
 
 ACLs control traffic flow within a network by allowing or denying packets based on predefined rules. This configuration allows HTTP and ICMP traffic but blocks all other traffic.
-
+This configuration defines an Access Control List (ACL) 101 to control inbound traffic on interface GigabitEthernet0/0. It allows specific types of traffic while blocking and logging all other traffic.
 ```
 access-list 101 permit tcp 192.168.1.0 0.0.0.255 any eq 80
 access-list 101 permit icmp any any
@@ -74,7 +76,17 @@ access-list 101 deny ip any any log
 interface GigabitEthernet0/0
 ip access-group 101 in
 ```
+## Summary ##
+Allowed:
 
+✅ HTTP (port 80) traffic from 192.168.1.0/24 to any destination.
+
+✅ ICMP (ping) traffic between any source and destination.
+
+Blocked & Logged:
+
+❌ All other incoming traffic on GigabitEthernet0/0 is denied and logged.
+This setup is commonly used on a router's LAN interface to allow web browsing and network diagnostics while blocking unwanted access attempts.
 ## 4. VLAN (Virtual Local Area Network) - VLAN and Trunking
 
 VLANs segment network traffic to improve security and efficiency. Trunking is used to allow multiple VLANs to communicate over a single link.
@@ -110,7 +122,7 @@ Finally, the configuration is saved to memory to persist across reboots.
 ## 5. OSPF (Open Shortest Path First) - Routing Protocol Setup
 
 OSPF is a dynamic routing protocol used to exchange routing information within an autonomous system. This configuration sets up OSPF on two network segments.
-
+This configuration sets up OSPF (Open Shortest Path First) routing on a Cisco router, enabling dynamic routing for specified networks in OSPF Area 0 (the backbone area).
 ```
 router ospf 1
 network 192.168.1.0 0.0.0.255 area 0
@@ -118,7 +130,14 @@ network 10.1.1.0 0.0.0.255 area 0
 exit
 write memory
 ```
+## Summary ##
+Enabled OSPF process 1 on the router.
 
+Advertised two networks (192.168.1.0/24 and 10.1.1.0/24) in OSPF Area 0.
+
+Ensured the configuration is saved permanently.
+
+This setup allows the router to dynamically exchange routing information with other OSPF-enabled routers, enabling efficient route selection and redundancy.
 ## 6. Configuring Switches - Port Security
 
 Port security restricts the number of MAC addresses allowed on a switch port, enhancing security by preventing unauthorized devices from connecting.
@@ -134,5 +153,17 @@ switchport port-security mac-address sticky
 exit
 write memory
 ```
+## Summary ##
+Configured GigabitEthernet0/1 as an access port for VLAN 10.
 
-These configurations are commonly used in enterprise networks to enhance security, optimize traffic, and ensure reliable connectivity. Feel free to modify them based on your network requirements!
+Enabled port security to:
+
+Allow a maximum of 2 devices.
+
+Restrict additional MAC addresses (blocks and logs violations).
+
+Learn MAC addresses dynamically (sticky MAC).
+
+Saved the configuration to NVRAM.
+
+This setup enhances security by preventing unauthorized devices from connecting while ensuring legitimate devices remain operational.
