@@ -21,7 +21,6 @@ ip nat outside
 exit
 write memory
 ```
-
 ## 2. VPN (Virtual Private Network) - Site-to-Site VPN (Cisco ASA)
 
 VPNs establish a secure connection between remote networks. This configuration sets up a site-to-site VPN using IPsec on a Cisco ASA device.
